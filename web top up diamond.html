@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Kyouka Top Up Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--accent1:#3b82f6;--accent2:#8b5cf6;--bg:#0f172a;--card:#1e293b;--text:#f8fafc;--muted:#94a3b8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--accent1),var(--accent2));min-height:100vh;color:var(--text);padding:18px}
+header{display:flex;align-items:center;gap:10px;background:rgba(30,41,59,0.6);padding:10px 14px;border-radius:14px;backdrop-filter:blur(12px);box-shadow:0 0 25px rgba(139,92,246,0.5),0 0 50px rgba(59,130,246,0.4)}
+.logo-container{width:100px;height:100px;border-radius:15px;overflow:hidden;display:flex;justify-content:center;align-items:center;box-shadow:0 0 20px rgba(255,255,255,0.2)}
+.slide-logo{width:100%;height:100%;object-fit:cover;opacity:0;transform:translateX(-40px);animation:slideLR 2s ease-in-out infinite alternate}
+@keyframes slideLR{0%{opacity:0;transform:translateX(-40px)}50%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(40px)}}
+.animated-title{font-size:22px;font-weight:700;white-space:nowrap;overflow:hidden;display:inline-block;background:linear-gradient(90deg,#60a5fa,#a855f7,#38bdf8,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;border-right:3px solid #60a5fa;animation:typing 4s steps(21,end) infinite alternate,blinkCursor .7s step-end infinite}
+@keyframes typing{0%{width:0ch}40%,60%{width:21ch}100%{width:0ch}}
+@keyframes blinkCursor{from,to{border-color:transparent}50%{border-color:#a855f7}}
+.container{max-width:1100px;margin:20px auto}
+.game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
+.game-card{background:rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;cursor:pointer;transition:.25s;text-align:center;box-shadow:0 0 15px rgba(59,130,246,0.3);backdrop-filter:blur(8px)}
+.game-card:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(139,92,246,0.7),0 0 60px rgba(59,130,246,0.6)}
+.game-thumb{width:100%;height:120px;object-fit:cover;display:block}
+.info{padding:12px}
+.title{font-weight:700;font-size:15px;margin-bottom:4px}
+.sub{color:var(--muted);font-size:13px}
+.topup-panel{display:none;background:rgba(30,41,59,0.85);border-radius:16px;padding:18px;box-shadow:0 0 35px rgba(139,92,246,0.5);backdrop-filter:blur(12px)}
+.top-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.top-head img{width:70px;height:70px;border-radius:12px;object-fit:cover;box-shadow:0 0 15px rgba(59,130,246,0.6)}
+input,select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.2);font-size:14px;margin-top:6px;background:rgba(255,255,255,0.1);color:#fff;transition:.25s}
+input::placeholder{color:#cbd5e1}
+select option{color:#0f172a}
+label{font-weight:600;font-size:14px;color:#e2e8f0;display:block;margin-top:10px}
+.package-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:12px}
+.package{background:rgba(255,255,255,0.1);border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:.2s;border:1px solid rgba(255,255,255,0.15)}
+.package:hover{transform:translateY(-6px);box-shadow:0 0 20px rgba(59,130,246,0.5)}
+.package.selected{border-color:#a855f7;box-shadow:0 0 25px rgba(168,85,247,0.6)}
+.pkg-amount{font-weight:800;font-size:16px;margin-bottom:6px;color:#fff}
+.pkg-price{font-size:13px;color:#cbd5e1}
+.payment-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:12px}
+.pay-card{background:rgba(255,255,255,0.1);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.15)}
+.pay-card img{width:50px;height:50px;object-fit:contain;margin-bottom:6px;filter:drop-shadow(0 0 6px #60a5fa)}
+.pay-card span{font-size:13px;font-weight:600;color:#fff}
+.pay-card:hover{transform:scale(1.07);box-shadow:0 0 25px rgba(139,92,246,0.6)}
+.pay-card.active{border-color:#a855f7;background:rgba(168,85,247,0.3);box-shadow:0 0 25px rgba(139,92,246,0.6)}
+.btn-primary{background:linear-gradient(90deg,#3b82f6,#8b5cf6);color:#fff;padding:12px 14px;border:none;border-radius:10px;font-weight:700;cursor:pointer;transition:.3s;width:100%;margin-top:16px;box-shadow:0 0 20px rgba(59,130,246,0.6)}
+.btn-primary:hover{box-shadow:0 0 40px rgba(139,92,246,0.8)}
+.back-btn{background:rgba(255,255,255,0.2);color:#fff;padding:10px 14px;border:none;border-radius:10px;font-weight:600;cursor:pointer;width:100%;margin-top:10px;transition:.3s;box-shadow:0 0 15px rgba(139,92,246,0.5)}
+.back-btn:hover{background:rgba(255,255,255,0.35);box-shadow:0 0 25px rgba(59,130,246,0.8)}
+</style>
+</head>
+<body>
+<header>
+<div class="logo-container"><img src="images/logo.png" alt="Logo" class="slide-logo"></div>
+<h1 class="animated-title">Kyouka Top Up Store</h1>
+</header>
+<div class="container">
+<div id="gameGrid" class="game-grid"></div>
+<div id="topupPanel" class="topup-panel">
+<div class="top-head">
+<img id="gameLogoLarge" src="">
+<div>
+<h2 id="selectedGameName"></h2>
+<div id="selectedGameTag" style="color:#cbd5e1;font-size:13px;margin-top:6px"></div>
+</div>
+</div>
+<div id="inputSection"></div>
+<div style="font-weight:700;margin-top:12px">Pilih Paket</div>
+<div id="packageGrid" class="package-grid"></div>
+<div style="font-weight:700;margin-top:12px">Metode Pembayaran</div>
+<div id="paymentGrid" class="payment-grid"></div>
+<button id="buyNowBtn" class="btn-primary">Bayar Sekarang</button>
+<button class="back-btn" onclick="goBack()">Kembali</button>
+</div>
+</div>
+<script>
+const games=[
+{name:"Mobile Legends",thumb:"images/logo_mlbb.png",item:"Diamonds",input:"user+server"},
+{name:"Free Fire",thumb:"images/logo_epep.jpg",item:"Diamonds",input:"user"},
+{name:"PUBG Mobile",thumb:"images/logo_Pubg.jpg",item:"UC",input:"user"},
+{name:"Genshin Impact",thumb:"images/logo-genshin.png",item:"Crystals",input:"user+server",servers:["Asia","America","Europe","TW, HK, MO"]},
+{name:"Honkai: Star Rail",thumb:"images/logo_hsr.png",item:"Shard",input:"user"},
+{name:"Clash of Clans",thumb:"images/logo_coc.jpg",item:"Gems",input:"user"},
+{name:"Call of Duty Mobile",thumb:"images/logo_codm.jpg",item:"CP",input:"user"},
+{name:"Higgs Domino",thumb:"images/logo_domino.jpg",item:"Chip",input:"user"}
+];
+const payments=[
+{name:"DANA",logo:"images/logo_dana.png"},
+{name:"OVO",logo:"images/logo_ovo.png"},
+{name:"GoPay",logo:"images/logo_gopay.png"},
+{name:"ShopeePay",logo:"images/logo_shoppepay.png"}
+];
+const allPackages={
+"Mobile Legends":[{label:"💎86",price:22996},{label:"💎172",price:45987},{label:"💎257",price:70305},{label:"💎344",price:93600}],
+"Free Fire":[{label:"💎100",price:13300},{label:"💎355",price:43580},{label:"💎720",price:83680},{label:"💎1075",price:135890}],
+"PUBG Mobile":[{label:"©60",price:15000},{label:"©325",price:74100},{label:"©660",price:148000},{label:"©1800",price:370000}],
+"Genshin Impact":[{label:"💎60",price:11000},{label:"💎330",price:55300},{label:"💎1090",price:171909},{label:"💎2240",price:371600}],
+"Honkai: Star Rail":[{label:"💎60",price:1100},{label:"💎330",price:55300},{label:"💎1090",price:171909},{label:"💎2240",price:371600}],
+"Clash of Clans":[{label:"500",price:69000},{label:"1200",price:139000},{label:"2500",price:279000},{label:"6500",price:699000}],
+"Call of Duty Mobile":[{label:"©128",price:17000},{label:"©645",price:87000},{label:"©1373",price:175700},{label:"©2060",price:266000}],
+"Higgs Domino":[{label:"©1B",price:10000},{label:"©5B",price:45000},{label:"©10B",price:85000},{label:"©20B",price:160000}]
+};
+let selectedGame=null,selectedPackage=null,selectedMethod=null;
+function formatIDR(n){return'Rp '+n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");}
+function renderGames(){
+const grid=document.getElementById('gameGrid');
+grid.innerHTML='';
+games.forEach((g,i)=>{
+const card=document.createElement('div');
+card.className='game-card';
+card.innerHTML=`<img class="game-thumb" src="${g.thumb}"><div class="info"><div class="title">${g.name}</div><div class="sub">Top up ${g.item}</div></div>`;
+card.onclick=()=>openTopup(i);
+grid.appendChild(card);
+});
+}
+function openTopup(i){
+selectedGame=games[i];
+document.getElementById('selectedGameName').textContent=selectedGame.name;
+document.getElementById('selectedGameTag').textContent=`Top up ${selectedGame.item}`;
+document.getElementById('gameLogoLarge').src=selectedGame.thumb;
+document.getElementById('gameGrid').style.display='none';
+document.getElementById('topupPanel').style.display='block';
+renderInput();renderPackages();renderPayments();
+}
+function renderInput(){
+const sec=document.getElementById('inputSection');sec.innerHTML='';
+if(selectedGame.name==="Genshin Impact"){
+sec.innerHTML=`<label>User ID</label><input id="userIdInput" type="text" placeholder="Masukkan User ID"><label>Server</label><select id="serverIdInput">${selectedGame.servers.map(s=>`<option value="${s}">${s}</option>`).join('')}</select>`;
+}
+else if(selectedGame.input==='user+server')
+sec.innerHTML=`<label>User ID</label><input id="userIdInput" type="text" placeholder="Masukkan User ID"><label>Server ID</label><input id="serverIdInput" type="text" placeholder="Masukkan Server ID">`;
+else if(selectedGame.input==='user+option')
+sec.innerHTML=`<label>User ID</label><input id="userIdInput" type="text" placeholder="Masukkan User ID"><label>Option</label><input id="serverIdInput" type="text" placeholder="Masukkan Option">`;
+else
+sec.innerHTML=`<label>User ID</label><input id="userIdInput" type="text" placeholder="Masukkan User ID">`;
+}
+function renderPackages(){
+const grid=document.getElementById('packageGrid');grid.innerHTML='';selectedPackage=null;
+(allPackages[selectedGame.name]||[]).forEach(p=>{
+const div=document.createElement('div');div.className='package';
+div.innerHTML=`<div class="pkg-amount">${p.label}</div><div class="pkg-price">${formatIDR(p.price)}</div>`;
+div.onclick=()=>{selectedPackage=p;document.querySelectorAll('.package').forEach(el=>el.classList.remove('selected'));div.classList.add('selected');};
+grid.appendChild(div);
+});
+}
+function renderPayments(){
+const grid=document.getElementById('paymentGrid');grid.innerHTML='';selectedMethod=null;
+payments.forEach(pmt=>{
+const card=document.createElement('div');
+card.className='pay-card';
+card.innerHTML=`<img src="${pmt.logo}"><span>${pmt.name}</span>`;
+card.onclick=()=>{selectedMethod=pmt.name;document.querySelectorAll('.pay-card').forEach(el=>el.classList.remove('active'));card.classList.add('active');};
+grid.appendChild(card);
+});
+}
+document.getElementById('buyNowBtn').onclick=()=>{
+if(!selectedPackage||!selectedMethod){alert('Silakan pilih paket dan metode pembayaran terlebih dahulu!');return;}
+const userId=document.getElementById('userIdInput')?.value||'';
+const serverId=document.getElementById('serverIdInput')?.value||'';
+if(userId.trim()===''){alert('Silakan masukkan User ID terlebih dahulu!');return;}
+const params=new URLSearchParams({game:selectedGame.name,paket:selectedPackage.label,harga:selectedPackage.price,metode:selectedMethod,userid:userId,server:serverId});
+window.location.href=`qr.php?${params.toString()}`;
+};
+function goBack(){
+document.getElementById('topupPanel').style.display='none';
+document.getElementById('gameGrid').style.display='grid';
+selectedPackage=null;selectedMethod=null;
+}
+renderGames();
+</script>
+</body>
+</html>
